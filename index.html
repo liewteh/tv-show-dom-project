@@ -1,29 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TV Show Project | Liew Teh (My GitHub liewteh)</title>
-    <link href="style.css" rel="stylesheet" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-  </head>
 
-  <body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TV Show Project | Liew Teh (My GitHub liewteh)</title>
+  <link href="style.css" rel="stylesheet" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+
+<body>
+  <div id='topContainer'>
+    <select id='selectOption' onclick='selectResult()'>
+      <option>All episodes</option>
+    </select>
+
     <div id='search'>
       <input type="text" id="myInput" onkeyup="mySearchFunction()" placeholder="Search">
       <p id='result'></p>
     </div>
-    <div id="root">
-    </div>
+  </div>
 
-    <div id = 'disclaimer'>
-      <h5>Fair Use Disclaimer: The data has (originally) come from <a href="https://www.tvmaze.com/">TVMaze.com</a></h5>
-    </div>
+  <div id="root"></div>
 
-    <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-    <script src="episodes.js"></script>
+  <div id='disclaimer'>
+    <h5>Fair Use Disclaimer: The data has (originally) come from <a href="https://www.tvmaze.com/">TVMaze.com</a></h5>
+  </div>
 
-    <!-- Loads YOUR javascript code -->
-    <script src="script.js"></script>
-  </body>
+  <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
+  <script src="episodes.js"></script>
+
+  <!-- Loads YOUR javascript code -->
+  <script src="script.js"></script>
+</body>
+
 </html>
