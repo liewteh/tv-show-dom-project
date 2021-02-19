@@ -97,7 +97,7 @@ function selectResult() {
       title = `S${pad(allEpisodes[i].season, 2)}E${pad(allEpisodes[i].number,2)}`;
 
       // Iterate over each list item to see if the value of the input, ignoring         case, matches the inner text or inner html of the item.
-      if (seasonNumber === title && seasonNumber !== 'All episodes') {
+      if (seasonNumber === title || selectedEpisode === 'All episodes') {
         // Displays list items that are a match, and nothing if no match
         li[i].classList.remove('hidden');
       } else {
