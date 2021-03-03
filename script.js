@@ -1,10 +1,25 @@
 function setup() {
-  const allEpisodes = getAllEpisodes();
+  // const allEpisodes = getAllEpisodes();
 
+  // level 350
+  fetch(`https://api.tvmaze.com/shows/82/episodes`)
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      let allEpisodes = data;
+      makePageForEpisodes(allEpisodes);
+      episodeSelection();
+      episodeFilter(allEpisodes);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 
-  makePageForEpisodes(allEpisodes);
-  episodeSelection();
-  episodeFilter(allEpisodes);
+  // // level 100 code
+  // makePageForEpisodes(allEpisodes);
+  // episodeSelection();
+  // episodeFilter(allEpisodes);
 }
 
 // Leading zeros function for Season number and Episode number
@@ -97,16 +112,14 @@ function liveSearch() {
 function episodeSelection() {
   const allEpisodes = getAllEpisodes();
   let select = document.getElementById('selectEpisode');
-  let index = 0;
 
   allEpisodes.forEach(elem => {
     let menuTitle = document.createElement('option'); // create display title tag
 
-    menuTitle.value = index;
+    menuTitle.value = elem.id;
     menuTitle.innerText = `S${pad(elem.season, 2)}E${pad(elem.number,2)} - ${elem.name}`;
 
     select.appendChild(menuTitle);
-    index++;
   })
 }
 
@@ -116,20 +129,17 @@ function episodeFilter(allEpisodes) {
 
   selectEpisode.addEventListener('change', elem => {
     let selectedEpisode = elem.target.value;
-
-    // let title = allEpisodes[selectedEpisode].name;
     // Grabs the parent element by id
-    ul = document.getElementById("episodeContainer");
+    let episodeContainer = document.getElementById("episodeContainer");
     // Individual item on list
-    li = ul.getElementsByTagName("li");
+    let oneEpisode = episodeContainer.getElementsByTagName("li");
 
     for (let i = 0; i < allEpisodes.length; i++) {
-
-      if (allEpisodes[selectedEpisode] === allEpisodes[i] || selectedEpisode === 'All episodes') {
+      if (selectedEpisode === (allEpisodes[i].id).toString() || selectedEpisode === 'All episodes') {
         // Displays list items that are a match, and nothing if no match
-        li[i].classList.remove('hidden');
+        oneEpisode[i].classList.remove('hidden');
       } else {
-        li[i].classList.add('hidden');
+        oneEpisode[i].classList.add('hidden');
       }
     }
   });
