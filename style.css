@@ -1,3 +1,61 @@
-#root {
-  color: red;
+body {
+  max-width: 1600px;
+}
+
+#searchContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 10px;
+}
+
+#selectShow,
+#selectEpisode,
+#keyInput,
+#liveSearch p {
+  margin: 5px;
+  padding: 10px;
+  height: fit-content;
+  min-width: 230px;
+}
+
+/* using class to hide non result  */
+.hidden {
+  display: none;
+}
+
+#liveSearchResult {
+  font-size: 1.5rem;
+  margin-left: 20px;
+}
+
+#liveSearch,
+#episodeContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+h4 {
+  width: 180px;
+  height: 33px;
+  border: 3px solid grey;
+  border-radius: 6px;
+  padding: 15px;
+  margin: 20px;
+  color: black;
+  text-align: center;
+}
+
+ul li {
+  list-style: none;
+  width: 250px;
+  border: 3px solid blue;
+  border-radius: 6px;
+  padding: 10px;
+  margin: 20px;
+  text-align: left;
+}
+
+#disclaimer {
+  text-align: center;
 }
