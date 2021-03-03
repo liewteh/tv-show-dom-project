@@ -1,17 +1,36 @@
-#myInput {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 180px;
-  border: 3px solid grey;
-  border-radius: 6px;
-  padding: 10px;
-  margin: 20px;
-  color: black;
-  text-align: center;
+body {
+  max-width: 1600px;
 }
 
-#mainContainer {
+#searchContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 10px;
+}
+
+#selectShow,
+#selectEpisode,
+#keyInput,
+#liveSearch p {
+  margin: 5px;
+  padding: 10px;
+  height: fit-content;
+  min-width: 230px;
+}
+
+/* using class to hide non result  */
+.hidden {
+  display: none;
+}
+
+#liveSearchResult {
+  font-size: 1.5rem;
+  margin-left: 20px;
+}
+
+#liveSearch,
+#episodeContainer {
   display: flex;
   flex-wrap: wrap;
 }
@@ -34,34 +53,7 @@ ul li {
   border-radius: 6px;
   padding: 10px;
   margin: 20px;
-  color: black;
   text-align: left;
-}
-
-/* using class to hide non result  */
-.hidden {
-  display: none;
-}
-
-#topContainer, #search {
-  display: flex;
-}
-
-#selectOption {
-  height: fit-content;
-  width: 300px;
-}
-
-option {
-  width: 400px;
-  padding-left: 20px;
-  margin-right: 20px;
-
-}
-
-#result {
-  font-size: 1.5rem;
-  margin-left: 20px;
 }
 
 #disclaimer {

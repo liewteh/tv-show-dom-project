@@ -1,8 +1,11 @@
-const allEpisodes = getAllEpisodes(); // get episodes data from episodes.js
-makePageForEpisodes(allEpisodes);
-let search = document.getElementById('search');
+function setup() {
+  const allEpisodes = getAllEpisodes();
 
 
+  makePageForEpisodes(allEpisodes);
+  episodeSelection();
+  episodeFilter(allEpisodes);
+}
 
 // Leading zeros function for Season number and Episode number
 function pad(num, size) {
@@ -11,93 +14,118 @@ function pad(num, size) {
   return num;
 }
 
-// level 100 (displaying data)
-function setup() {
-  allEpisodes.forEach(elem => {
-    let list = document.createElement('li');
-    let img = document.createElement('img'); // create display image tag
+// level 100 make and display each episode
+// function for Episode's Title and Season
+function makeEpisodeTitleAndSeason(elem) {
+  const episodeTitle = document.createElement("h4");
 
-    img.id = 'img';
-    img.src = `${elem.image.medium}`;
-    list.innerHTML = elem.summary;
+  episodeTitle.id = `S${pad(elem.season, 2)}E${pad(elem.number, 2)}`;
+  episodeTitle.innerText = `${elem.name} - S${pad(elem.season, 2)}E${pad(elem.number, 2)}`;
 
-    list.insertBefore((titleAndSeason(elem)), list.childNodes[0]);
-    list.insertBefore(img, list.childNodes[1]);
-    mainContainer.appendChild(list);
-  })
+  return episodeTitle;
 }
 
-// get title and season; level 100 & 300
-function titleAndSeason(elem) {
-  let title = document.createElement('h4'); // create display title tag
-  title.id = `S${pad(elem.season, 2)}E${pad(elem.number,2)}`;
-  title.innerText = `${elem.name} - S${pad(elem.season, 2)}E${pad(elem.number,2)}`;
-  return title;
+// function for Episode's Image
+function makeEpisodeImg(elem) {
+  const episodeImg = document.createElement("img");
+
+  episodeImg.id = "episodeImg";
+  episodeImg.src = elem.image.medium;
+
+  return episodeImg;
+}
+
+// function to create an episode with title & season, and image 
+function makeOneEpisode(elem) {
+  const oneEpisode = document.createElement("li");
+
+  oneEpisode.value = elem.id;
+  oneEpisode.innerHTML = elem.summary;
+
+  oneEpisode.insertBefore(makeEpisodeTitleAndSeason(elem), oneEpisode.childNodes[0]);
+  oneEpisode.insertBefore(makeEpisodeImg(elem), oneEpisode.childNodes[1]);
+
+  return oneEpisode;
+}
+
+// function to create all episodes
+function makePageForEpisodes(episodes) {
+  const rootElem = document.getElementById("root");
+  let episodeContainer = document.createElement("ul");
+
+  episodeContainer.id = "episodeContainer";
+  episodeContainer.innerHTML = "";
+
+  episodes.forEach((episode) => {
+    episodeContainer.appendChild(makeOneEpisode(episode));
+  });
+
+  rootElem.appendChild(episodeContainer);
 }
 
 // level 200 (live search and result counter)
-function mySearchFunction() {
-  // Declare variables
-  let input, filter, ul, li, title, summaryNoP, i;
-  // User Input
-  input = document.getElementById("myInput");
-  // Filter, makes search not case sensitive
-  filter = input.value.toUpperCase();
-  // Grabs the parent element by id
-  ul = document.getElementById("mainContainer");
-  // Individual item on list
-  li = ul.getElementsByTagName("li");
+function liveSearch() {
+  const allEpisodes = getAllEpisodes();
+  // user input
+  let keyInput = document.getElementById('keyInput');
+  // filter, makes search not case sensitive
+  let filter = keyInput.value.toUpperCase();
+  // grabs the parent element by id
+  let episodeContainer = document.getElementById('episodeContainer');
+  // individual item on list
+  let oneEpisode = episodeContainer.getElementsByTagName("li");
 
-  // Treats lists items like an array, where each item can be accessed through      it's index
-  for (i = 0; i < allEpisodes.length; i++) {
-    title = allEpisodes[i].name;
-    summaryNoP = allEpisodes[i].summary;
-    summaryNoP = summaryNoP.replace(/(<p>|<\/p>)/g, ""); // regex to remove <p> tag from data
+  let counter = 0;
 
-    // Iterate over each list item to see if the value of the input, ignoring         case, matches the inner text or inner html of the item.
-    if (summaryNoP.toUpperCase().indexOf(filter) > -1 || title.toUpperCase().indexOf(filter) > -1) {
-      // Displays list items that are a match, and nothing if no match
-      li[i].classList.remove('hidden');
+  for (let i = 0; i < allEpisodes.length; i++) {
+    let title = allEpisodes[i].name;
+    let summaryNoPTag = allEpisodes[i].summary;
+    summaryNoPTag = summaryNoPTag.replace(/(<p>|<\/p>)/g, ""); // regex to remove <p> tag from data
+
+    if (summaryNoPTag.toUpperCase().indexOf(filter) > -1 || title.toUpperCase().indexOf(filter) > -1) {
+      oneEpisode[i].classList.remove('hidden');
+      counter += 1;
     } else {
-      li[i].classList.add('hidden');
+      oneEpisode[i].classList.add('hidden');
     }
   }
-  // display search's result number
-  document.getElementById('result').textContent = `Displaying ${document.querySelectorAll('#mainContainer li:not(.hidden)').length}/${allEpisodes.length} episodes`;
+  document.getElementById('liveSearchResult').textContent = `Displaying ${counter}/${allEpisodes.length} episodes`;
 }
 
 // level 300
-// display drop menu
-function displaySelection() {
-  let select = document.getElementById('selectOption');
+// create episode selection
+function episodeSelection() {
+  const allEpisodes = getAllEpisodes();
+  let select = document.getElementById('selectEpisode');
+  let index = 0;
 
   allEpisodes.forEach(elem => {
     let menuTitle = document.createElement('option'); // create display title tag
+
+    menuTitle.value = index;
     menuTitle.innerText = `S${pad(elem.season, 2)}E${pad(elem.number,2)} - ${elem.name}`;
 
     select.appendChild(menuTitle);
+    index++;
   })
 }
-displaySelection();
 
-function selectResult() {
-  document.getElementById('selectOption').addEventListener('change', function (elem) {
-    let selectedEpisode = elem.currentTarget.value;
-    let seasonNumber = selectedEpisode.split(" ").shift();
+// selection filter
+function episodeFilter(allEpisodes) {
+  let selectEpisode = document.getElementById('selectEpisode');
 
-    let ul, li, title, i;
+  selectEpisode.addEventListener('change', elem => {
+    let selectedEpisode = elem.target.value;
 
+    // let title = allEpisodes[selectedEpisode].name;
     // Grabs the parent element by id
-    ul = document.getElementById("mainContainer");
+    ul = document.getElementById("episodeContainer");
     // Individual item on list
     li = ul.getElementsByTagName("li");
-    
-    // Treats lists items like an array, where each item can be accessed through      it's index
-    for (i = 0; i < allEpisodes.length; i++) {
-      title = `S${pad(allEpisodes[i].season, 2)}E${pad(allEpisodes[i].number,2)}`;
 
-      // Iterate over each list item to see if the value of the input, ignoring         case, matches the inner text or inner html of the item.
-      if (seasonNumber === title || selectedEpisode === 'All episodes') {
+    for (let i = 0; i < allEpisodes.length; i++) {
+
+      if (allEpisodes[selectedEpisode] === allEpisodes[i] || selectedEpisode === 'All episodes') {
         // Displays list items that are a match, and nothing if no match
         li[i].classList.remove('hidden');
       } else {
@@ -105,13 +133,6 @@ function selectResult() {
       }
     }
   });
-}
-
-function makePageForEpisodes(episodeList) {
-  let rootElem = document.getElementById("root");
-  let mainContainer = document.createElement('ul');
-  mainContainer.id = 'mainContainer';
-  rootElem.appendChild(mainContainer);
 }
 
 window.onload = setup;

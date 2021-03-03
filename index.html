@@ -10,14 +10,21 @@
 </head>
 
 <body>
-  <div id='topContainer'>
-    <select id='selectOption' onclick='selectResult()'>
+  <div id='searchContainer'>
+    <!-- Select Show Box -->
+    <select id='selectShow'>
+      <option>Select Show</option>
+    </select>
+
+    <!-- Select Episode Box -->
+    <select id='selectEpisode'>
       <option>All episodes</option>
     </select>
 
-    <div id='search'>
-      <input type="text" id="myInput" onkeyup="mySearchFunction()" placeholder="Search">
-      <p id='result'></p>
+    <!-- Keyword Search -->
+    <div id='liveSearch'>
+      <input type='text' id='keyInput' onkeyup='liveSearch()' placeholder="Search">
+      <p id='liveSearchResult'></p>
     </div>
   </div>
 
@@ -29,7 +36,8 @@
 
   <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
   <script src="episodes.js"></script>
-
+  <!-- load - provided function called getAllShows() which returns all shows -->
+  <script src="shows.js"></script>
   <!-- Loads YOUR javascript code -->
   <script src="script.js"></script>
 </body>
