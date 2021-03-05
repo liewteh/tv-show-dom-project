@@ -1,4 +1,3 @@
-// let allEpisodes;
 let allShows = getAllShows();
 
 function setup() {
@@ -74,7 +73,6 @@ function makeOneShow(elem) {
         console.log(error);
       });    
   })
-
   return oneShow;
 }
 
@@ -90,8 +88,6 @@ function displayShows(shows) {
   });
   rootElem.appendChild(ul);
 }
-
-
 
 // level 400
 function selectShows() {
