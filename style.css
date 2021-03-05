@@ -9,6 +9,12 @@ body {
   padding: 10px;
 }
 
+#home {
+  margin: 5px;
+  padding: 10px;
+  height: fit-content;
+}
+
 #selectShow,
 #selectEpisode,
 #keyInput,
