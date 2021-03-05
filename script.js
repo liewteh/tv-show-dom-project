@@ -1,20 +1,41 @@
-function setup() {
-  // const allEpisodes = getAllEpisodes(); // level 100
+let allEpisodes;
 
-  // level 350
-  fetch(`https://api.tvmaze.com/shows/82/episodes`)
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      let allEpisodes = data;
-      makePageForEpisodes(allEpisodes);
-      episodeSelection();
-      episodeFilter(allEpisodes);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+function setup() {
+  selectShows();
+}
+
+// level 400
+function selectShows() {
+  let selectShow = document.getElementById('selectShow');
+  let allShow = getAllShows();
+
+  allShow.forEach(show => {
+    let menuTitle = document.createElement('option'); // create display title tag
+
+    menuTitle.value = show.id;
+
+    menuTitle.innerText = show.name;
+
+    selectShow.appendChild(menuTitle);
+  });
+
+  selectShow.addEventListener('change', function (event) {
+    let showId = event.target.value;
+
+    fetch(`https://api.tvmaze.com/shows/${showId}/episodes`)
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        allEpisodes = data;
+        makePageForEpisodes(allEpisodes);
+        episodeSelection(allEpisodes);
+        episodeFilter(allEpisodes);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  });
 }
 
 // Leading zeros function for Season number and Episode number
@@ -40,7 +61,7 @@ function makeEpisodeImg(elem) {
   const episodeImg = document.createElement("img");
 
   episodeImg.id = "episodeImg";
-  episodeImg.src = elem.image.medium;
+  episodeImg.src = elem.image?.medium;
 
   return episodeImg;
 }
@@ -64,7 +85,7 @@ function makePageForEpisodes(episodes) {
   let ul = document.createElement("ul");
 
   ul.id = 'ul';
-  ul.innerHTML = "";
+  rootElem.innerHTML = "";
 
   episodes.forEach((episode) => {
     ul.appendChild(makeOneEpisode(episode));
@@ -75,7 +96,7 @@ function makePageForEpisodes(episodes) {
 
 // level 200 (live search and result counter)
 function liveSearch() {
-  const allEpisodes = getAllEpisodes();
+  // const allEpisodes = getAllEpisodes();
   // user input
   let keyInput = document.getElementById('keyInput');
   // filter, makes search not case sensitive
@@ -104,8 +125,8 @@ function liveSearch() {
 
 // level 300
 // create episode selection
-function episodeSelection() {
-  const allEpisodes = getAllEpisodes();
+function episodeSelection(allEpisodes) {
+  // const allEpisodes = getAllEpisodes();
   let select = document.getElementById('selectEpisode');
 
   allEpisodes.forEach(elem => {
@@ -128,7 +149,6 @@ function episodeFilter(allEpisodes) {
     let ul = document.getElementById("ul");
     // Individual item on list
     let oneEpisode = ul.getElementsByTagName("li");
-
     for (let i = 0; i < allEpisodes.length; i++) {
       if (selectedEpisode === (allEpisodes[i].id).toString() || selectedEpisode === 'All episodes') {
         // Displays list items that are a match, and nothing if no match
