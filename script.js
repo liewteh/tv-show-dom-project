@@ -1,6 +1,5 @@
 let allEpisodes;
 let allShows = getAllShows();
-let ul = document.createElement("ul");
 
 function setup() {
   displayShows(allShows);
@@ -48,9 +47,8 @@ function makeOneShow(elem) {
 // function to create all episodes
 function displayShows(shows) {
   const rootElem = document.getElementById("root");
-  // let ul = document.createElement("ul");
+  let ul = document.createElement("ul");
 
-  ul.id = 'ul';
   rootElem.innerHTML = "";
 
   shows.forEach((episode) => {
@@ -67,7 +65,6 @@ function selectShows() {
     let menuTitle = document.createElement('option'); // create display title tag
 
     menuTitle.value = show.id;
-
     menuTitle.innerText = show.name;
 
     selectShow.appendChild(menuTitle);
@@ -146,11 +143,8 @@ function liveSearch() {
   let keyInput = document.getElementById('keyInput');
   // filter, makes search not case sensitive
   let filter = keyInput.value.toUpperCase();
-  // grabs the parent element by id
-  // let ul = document.getElementById('ul');
   // individual item on list
   let oneEpisode = ul.getElementsByTagName("li");
-
   let counter = 0;
 
   for (let i = 0; i < allEpisodes.length; i++) {
