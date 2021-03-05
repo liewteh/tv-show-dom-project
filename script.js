@@ -1,15 +1,69 @@
 let allEpisodes;
+let allShows = getAllShows();
+let ul = document.createElement("ul");
 
 function setup() {
+  displayShows(allShows);
   selectShows();
+}
+
+// Leading zeros function for Season number and Episode number
+function pad(num, size) {
+  let number = num.toString();
+  while (number.length < size) number = "0" + num;
+  return number;
+}
+
+// level 500
+// function to create a show
+function makeOneShow(elem) {
+  const oneShow = document.createElement("li");
+  const showTitle = document.createElement("h4");
+  const showImg = document.createElement("img");
+  const genre = document.createElement('p');
+  const status = document.createElement('p');
+  const rating = document.createElement('p');
+  const runtime = document.createElement('p');
+
+  oneShow.value = elem.id;
+  showTitle.innerText = elem.name;
+  showImg.id = "ShowImg";
+  showImg.src = elem.image?.medium;
+  oneShow.innerHTML = elem.summary;
+  genre.innerText = `\nGenre: ${elem.genres}`;
+  status.innerText = `Status: ${elem.status}`;
+  rating.innerText = `Average: ${elem.rating.average}`;
+  runtime.innerText = `Runtime: ${elem.runtime}`;
+
+  oneShow.insertBefore(showTitle, oneShow.childNodes[0]);
+  oneShow.insertBefore(showImg, oneShow.childNodes[1]);
+  oneShow.appendChild(genre);
+  oneShow.appendChild(status);
+  oneShow.appendChild(rating);
+  oneShow.appendChild(runtime);
+
+  return oneShow;
+}
+
+// function to create all episodes
+function displayShows(shows) {
+  const rootElem = document.getElementById("root");
+  // let ul = document.createElement("ul");
+
+  ul.id = 'ul';
+  rootElem.innerHTML = "";
+
+  shows.forEach((episode) => {
+    ul.appendChild(makeOneShow(episode));
+  });
+  rootElem.appendChild(ul);
 }
 
 // level 400
 function selectShows() {
   let selectShow = document.getElementById('selectShow');
-  let allShow = getAllShows();
 
-  allShow.forEach(show => {
+  allShows.forEach(show => {
     let menuTitle = document.createElement('option'); // create display title tag
 
     menuTitle.value = show.id;
@@ -38,19 +92,11 @@ function selectShows() {
   });
 }
 
-// Leading zeros function for Season number and Episode number
-function pad(num, size) {
-  num = num.toString();
-  while (num.length < size) num = "0" + num;
-  return num;
-}
-
 // level 100 make and display each episode
 // function for Episode's Title and Season
 function makeEpisodeTitleAndSeason(elem) {
   const episodeTitle = document.createElement("h4");
 
-  episodeTitle.id = `S${pad(elem.season, 2)}E${pad(elem.number, 2)}`;
   episodeTitle.innerText = `${elem.name} - S${pad(elem.season, 2)}E${pad(elem.number, 2)}`;
 
   return episodeTitle;
@@ -96,13 +142,12 @@ function makePageForEpisodes(episodes) {
 
 // level 200 (live search and result counter)
 function liveSearch() {
-  // const allEpisodes = getAllEpisodes();
   // user input
   let keyInput = document.getElementById('keyInput');
   // filter, makes search not case sensitive
   let filter = keyInput.value.toUpperCase();
   // grabs the parent element by id
-  let ul = document.getElementById('ul');
+  // let ul = document.getElementById('ul');
   // individual item on list
   let oneEpisode = ul.getElementsByTagName("li");
 
@@ -126,7 +171,6 @@ function liveSearch() {
 // level 300
 // create episode selection
 function episodeSelection(allEpisodes) {
-  // const allEpisodes = getAllEpisodes();
   let select = document.getElementById('selectEpisode');
 
   allEpisodes.forEach(elem => {
