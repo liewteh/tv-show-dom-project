@@ -30,7 +30,7 @@ body {
 }
 
 #liveSearch,
-#episodeContainer {
+ul {
   display: flex;
   flex-wrap: wrap;
 }
