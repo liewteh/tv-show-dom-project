@@ -1,5 +1,5 @@
 function setup() {
-  // const allEpisodes = getAllEpisodes();
+  // const allEpisodes = getAllEpisodes(); // level 100
 
   // level 350
   fetch(`https://api.tvmaze.com/shows/82/episodes`)
@@ -15,11 +15,6 @@ function setup() {
     .catch(function (error) {
       console.log(error);
     });
-
-  // // level 100 code
-  // makePageForEpisodes(allEpisodes);
-  // episodeSelection();
-  // episodeFilter(allEpisodes);
 }
 
 // Leading zeros function for Season number and Episode number
@@ -66,16 +61,16 @@ function makeOneEpisode(elem) {
 // function to create all episodes
 function makePageForEpisodes(episodes) {
   const rootElem = document.getElementById("root");
-  let episodeContainer = document.createElement("ul");
+  let ul = document.createElement("ul");
 
-  episodeContainer.id = "episodeContainer";
-  episodeContainer.innerHTML = "";
+  ul.id = 'ul';
+  ul.innerHTML = "";
 
   episodes.forEach((episode) => {
-    episodeContainer.appendChild(makeOneEpisode(episode));
+    ul.appendChild(makeOneEpisode(episode));
   });
 
-  rootElem.appendChild(episodeContainer);
+  rootElem.appendChild(ul);
 }
 
 // level 200 (live search and result counter)
@@ -86,9 +81,9 @@ function liveSearch() {
   // filter, makes search not case sensitive
   let filter = keyInput.value.toUpperCase();
   // grabs the parent element by id
-  let episodeContainer = document.getElementById('episodeContainer');
+  let ul = document.getElementById('ul');
   // individual item on list
-  let oneEpisode = episodeContainer.getElementsByTagName("li");
+  let oneEpisode = ul.getElementsByTagName("li");
 
   let counter = 0;
 
@@ -130,9 +125,9 @@ function episodeFilter(allEpisodes) {
   selectEpisode.addEventListener('change', elem => {
     let selectedEpisode = elem.target.value;
     // Grabs the parent element by id
-    let episodeContainer = document.getElementById("episodeContainer");
+    let ul = document.getElementById("ul");
     // Individual item on list
-    let oneEpisode = episodeContainer.getElementsByTagName("li");
+    let oneEpisode = ul.getElementsByTagName("li");
 
     for (let i = 0; i < allEpisodes.length; i++) {
       if (selectedEpisode === (allEpisodes[i].id).toString() || selectedEpisode === 'All episodes') {
