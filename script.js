@@ -173,7 +173,6 @@ function makeEpisodeImg(elem) {
   } else {
     episodeImg.src = 'https://static.tvmaze.com/images/no-img/no-img-portrait-text.png';
   };
-
   return episodeImg;
 }
 
@@ -297,10 +296,8 @@ function episodeFilter(allEpisodes) {
       if (selectedEpisode === (allEpisodes[i].id).toString() || selectedEpisode === '') {
         // Displays list items that are a match, and nothing if no match
         oneEpisode[i].classList.remove('hidden');
-
         // reset live search
         reset();
-
       } else {
         oneEpisode[i].classList.add('hidden');
       }
