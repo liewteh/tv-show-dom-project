@@ -206,7 +206,6 @@ function makePageForEpisodes(episodes) {
 
 // level 200 (live search and result counter)
 function liveSearch() {
-
   document.getElementById('selectEpisode').value = '';
 
   if (episodesPage === true) {
@@ -244,9 +243,12 @@ function liveSearch() {
       let title = allShows[i].name;
       let summaryNoPTag = allShows[i].summary;
       summaryNoPTag = summaryNoPTag.replace(/(<p>|<\/p>)/g, ""); // regex to remove <p> tag from data
+      let showGenre = allShows[i].genres.join(' '); // array of genres into string
 
-      if (summaryNoPTag.toUpperCase().indexOf(filter) > -1 ||
-      title.toUpperCase().indexOf(filter) > -1) {
+      if (
+      summaryNoPTag.toUpperCase().indexOf(filter) > -1 ||
+      title.toUpperCase().indexOf(filter) > -1 ||
+      showGenre.toUpperCase().indexOf(filter) > -1) {
         oneEpisode[i].classList.remove('hidden');
         counter += 1;
       } else {
