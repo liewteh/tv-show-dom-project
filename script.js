@@ -86,8 +86,8 @@ function makeOneShow(elem) {
       .catch(function (error) {
         console.log(error);
       });
-  })
-
+    document.getElementById('selectShow').value = showId;
+  });
   return oneShow;
 }
 
@@ -127,7 +127,7 @@ function selectShows() {
     let showId = event.target.value;
 
     if (showId === '') {
-      setup();
+      setup(); // when select show click, display all shows
     } else {
       // change live search to search episode
       episodesPage = true;
