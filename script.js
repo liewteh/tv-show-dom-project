@@ -1,7 +1,8 @@
 let allShows = getAllShows();
+let episodesPage = false;
 
 function setup() {
-  homeButton ();
+  homeButton();
   displayShows(allShows);
   selectShows();
 }
@@ -14,14 +15,21 @@ function pad(num, size) {
 }
 
 // level 500
-function homeButton () {
+function homeButton() {
   let homeBtn = document.getElementById('home');
 
   homeBtn.addEventListener('click', elem => {
-    setup();
+    // reset live search
+    reset();
+
+    // change live search to search shows
+    episodesPage = false;
+
+    setup(); // display shows
     const selectShow = document.getElementById('selectShow');
     const selectEpisode = document.getElementById('selectEpisode');
-    
+
+    // reset select Show drop-down
     selectShow.value = '';
     selectEpisode.options.length = 1;
   })
@@ -38,6 +46,7 @@ function makeOneShow(elem) {
   const runtime = document.createElement('p');
 
   oneShow.value = elem.id;
+  showTitle.value = elem.id;
   showTitle.innerText = elem.name;
   showImg.id = "ShowImg";
   if (elem.image) {
@@ -56,8 +65,11 @@ function makeOneShow(elem) {
   oneShow.appendChild(rating);
   oneShow.appendChild(runtime);
 
-  oneShow.addEventListener('click', elem => {
+  showTitle.addEventListener('click', elem => {
     let showId = elem.target.value;
+
+    // change live search to search episode
+    episodesPage = true;
 
     fetch(`https://api.tvmaze.com/shows/${showId}/episodes`)
       .then(response => {
@@ -71,8 +83,9 @@ function makeOneShow(elem) {
       })
       .catch(function (error) {
         console.log(error);
-      });    
+      });
   })
+
   return oneShow;
 }
 
@@ -81,12 +94,18 @@ function displayShows(shows) {
   const rootElem = document.getElementById("root");
   let ul = document.createElement("ul");
 
+  ul.id = 'ulShows';
+
+  // reset page
   rootElem.innerHTML = "";
 
   shows.forEach((episode) => {
     ul.appendChild(makeOneShow(episode));
   });
   rootElem.appendChild(ul);
+
+  // change live search to search shows
+  episodesPage = false;
 }
 
 // level 400
@@ -105,20 +124,31 @@ function selectShows() {
   selectShow.addEventListener('change', function (event) {
     let showId = event.target.value;
 
-    fetch(`https://api.tvmaze.com/shows/${showId}/episodes`)
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        allEpisodes = data;
-        makePageForEpisodes(allEpisodes);
-        episodeSelection(allEpisodes);
-        episodeFilter(allEpisodes);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    if (showId === '') {
+      setup();
+    } else {
+      // change live search to search episode
+      episodesPage = true;
+
+      // reset live search
+      reset();
+
+      fetch(`https://api.tvmaze.com/shows/${showId}/episodes`)
+        .then(response => {
+          return response.json();
+        })
+        .then(data => {
+          allEpisodes = data;
+          makePageForEpisodes(allEpisodes);
+          episodeSelection(allEpisodes);
+          episodeFilter(allEpisodes);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   });
+
 }
 
 // level 100 make and display each episode
@@ -136,7 +166,9 @@ function makeEpisodeImg(elem) {
   const episodeImg = document.createElement("img");
 
   episodeImg.id = "episodeImg";
-  episodeImg.src = elem.image?.medium;
+  if (elem.image) {
+    episodeImg.src = elem.image?.medium;
+  };
 
   return episodeImg;
 }
@@ -159,7 +191,7 @@ function makePageForEpisodes(episodes) {
   const rootElem = document.getElementById("root");
   let ul = document.createElement("ul");
 
-  ul.id = 'ul';
+  ul.id = 'ulEpisodes';
   rootElem.innerHTML = "";
 
   episodes.forEach((episode) => {
@@ -167,31 +199,63 @@ function makePageForEpisodes(episodes) {
   });
 
   rootElem.appendChild(ul);
+
+  // reset live search
+  reset();
 }
 
 // level 200 (live search and result counter)
 function liveSearch() {
-  // user input
-  let keyInput = document.getElementById('keyInput');
-  // filter, makes search not case sensitive
-  let filter = keyInput.value.toUpperCase();
-  // individual item on list
-  let oneEpisode = ul.getElementsByTagName("li");
-  let counter = 0;
 
-  for (let i = 0; i < allEpisodes.length; i++) {
-    let title = allEpisodes[i].name;
-    let summaryNoPTag = allEpisodes[i].summary;
-    summaryNoPTag = summaryNoPTag.replace(/(<p>|<\/p>)/g, ""); // regex to remove <p> tag from data
+  document.getElementById('selectEpisode').value = '';
 
-    if (summaryNoPTag.toUpperCase().indexOf(filter) > -1 || title.toUpperCase().indexOf(filter) > -1) {
-      oneEpisode[i].classList.remove('hidden');
-      counter += 1;
-    } else {
-      oneEpisode[i].classList.add('hidden');
+  if (episodesPage === true) {
+    // user input
+    let keyInput = document.getElementById('keyInput');
+    // filter, makes search not case sensitive
+    let filter = keyInput.value.toUpperCase();
+    // individual item on list
+    let oneEpisode = ulEpisodes.getElementsByTagName("li");
+    let counter = 0;
+
+    for (let i = 0; i < allEpisodes.length; i++) {
+      let title = allEpisodes[i].name;
+      let summaryNoPTag = allEpisodes[i].summary;
+      summaryNoPTag = summaryNoPTag.replace(/(<p>|<\/p>)/g, ""); // regex to remove <p> tag from data
+
+      if (summaryNoPTag.toUpperCase().indexOf(filter) > -1 || title.toUpperCase().indexOf(filter) > -1) {
+        oneEpisode[i].classList.remove('hidden');
+        counter += 1;
+      } else {
+        oneEpisode[i].classList.add('hidden');
+      }
     }
+    document.getElementById('liveSearchResult').textContent = `Displaying ${counter}/${allEpisodes.length} episodes`;
+  } else {
+    // user input
+    let keyInput = document.getElementById('keyInput');
+    // filter, makes search not case sensitive
+    let filter = keyInput.value.toUpperCase();
+    // individual item on list
+    let oneEpisode = ulShows.getElementsByTagName("li");
+    let counter = 0;
+
+    for (let i = 0; i < allShows.length; i++) {
+      let title = allShows[i].name;
+      let summaryNoPTag = allShows[i].summary;
+      summaryNoPTag = summaryNoPTag.replace(/(<p>|<\/p>)/g, ""); // regex to remove <p> tag from data
+
+      if (summaryNoPTag.toUpperCase().indexOf(filter) > -1 ||
+      title.toUpperCase().indexOf(filter) > -1 ||
+      genreString.toUpperCase().indexOf(filter) > -1) {
+        oneEpisode[i].classList.remove('hidden');
+        counter += 1;
+      } else {
+        oneEpisode[i].classList.add('hidden');
+      }
+    }
+    document.getElementById('liveSearchResult').textContent = `Displaying ${counter}/${allShows.length} shows`;
   }
-  document.getElementById('liveSearchResult').textContent = `Displaying ${counter}/${allEpisodes.length} episodes`;
 }
 
 // level 300
@@ -199,6 +263,7 @@ function liveSearch() {
 function episodeSelection(allEpisodes) {
   let select = document.getElementById('selectEpisode');
 
+  // reset select episode drop-down but keep All episode (option)
   while (select.lastChild.id !== 'default') {
     select.removeChild(select.lastChild);
   }
@@ -220,13 +285,17 @@ function episodeFilter(allEpisodes) {
   selectEpisode.addEventListener('change', elem => {
     let selectedEpisode = elem.target.value;
     // Grabs the parent element by id
-    let ul = document.getElementById("ul");
+    let ul = document.getElementById("ulEpisodes");
     // Individual item on list
     let oneEpisode = ul.getElementsByTagName("li");
     for (let i = 0; i < allEpisodes.length; i++) {
       if (selectedEpisode === (allEpisodes[i].id).toString() || selectedEpisode === '') {
         // Displays list items that are a match, and nothing if no match
         oneEpisode[i].classList.remove('hidden');
+
+        // reset live search
+        reset();
+
       } else {
         oneEpisode[i].classList.add('hidden');
       }
@@ -234,4 +303,8 @@ function episodeFilter(allEpisodes) {
   });
 }
 
+function reset() {
+  document.getElementById('keyInput').value = '';
+  document.getElementById('liveSearchResult').innerHTML = '';
+}
 window.onload = setup;
