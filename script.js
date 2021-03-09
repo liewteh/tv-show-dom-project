@@ -246,8 +246,7 @@ function liveSearch() {
       summaryNoPTag = summaryNoPTag.replace(/(<p>|<\/p>)/g, ""); // regex to remove <p> tag from data
 
       if (summaryNoPTag.toUpperCase().indexOf(filter) > -1 ||
-      title.toUpperCase().indexOf(filter) > -1 ||
-      genreString.toUpperCase().indexOf(filter) > -1) {
+      title.toUpperCase().indexOf(filter) > -1) {
         oneEpisode[i].classList.remove('hidden');
         counter += 1;
       } else {
