@@ -51,7 +51,9 @@ function makeOneShow(elem) {
   showImg.id = "ShowImg";
   if (elem.image) {
     showImg.src = elem.image?.medium;
-  }
+  } else {
+    showImg.src = 'https://static.tvmaze.com/images/no-img/no-img-portrait-text.png';
+  };
   oneShow.innerHTML = elem.summary;
   genre.innerText = `\nGenre: ${elem.genres}`;
   status.innerText = `Status: ${elem.status}`;
@@ -168,6 +170,8 @@ function makeEpisodeImg(elem) {
   episodeImg.id = "episodeImg";
   if (elem.image) {
     episodeImg.src = elem.image?.medium;
+  } else {
+    episodeImg.src = 'https://static.tvmaze.com/images/no-img/no-img-portrait-text.png';
   };
 
   return episodeImg;
