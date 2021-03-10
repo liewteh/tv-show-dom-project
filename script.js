@@ -1,4 +1,5 @@
 let allShows = getAllShows();
+let allEpisodes;
 let episodesPage = false;
 
 function setup() {
@@ -125,9 +126,14 @@ function selectShows() {
 
   selectShow.addEventListener('change', function (event) {
     let showId = event.target.value;
+    let select = document.getElementById('selectEpisode');
 
     if (showId === '') {
       setup(); // when select show click, display all shows
+      // reset episode dropdown
+      while (select.lastChild.id !== 'default') {
+        select.removeChild(select.lastChild);
+      };
     } else {
       // change live search to search episode
       episodesPage = true;
@@ -173,7 +179,6 @@ function makeEpisodeImg(elem) {
   } else {
     episodeImg.src = 'https://static.tvmaze.com/images/no-img/no-img-portrait-text.png';
   };
-
   return episodeImg;
 }
 
@@ -201,7 +206,6 @@ function makePageForEpisodes(episodes) {
   episodes.forEach((episode) => {
     ul.appendChild(makeOneEpisode(episode));
   });
-
   rootElem.appendChild(ul);
 
   // reset live search
@@ -249,8 +253,7 @@ function liveSearch() {
       summaryNoPTag = summaryNoPTag.replace(/(<p>|<\/p>)/g, ""); // regex to remove <p> tag from data
       let showGenre = allShows[i].genres.join(' '); // array of genres into string
 
-      if (
-      summaryNoPTag.toUpperCase().indexOf(filter) > -1 ||
+      if (summaryNoPTag.toUpperCase().indexOf(filter) > -1 ||
       title.toUpperCase().indexOf(filter) > -1 ||
       showGenre.toUpperCase().indexOf(filter) > -1) {
         oneEpisode[i].classList.remove('hidden');
@@ -297,10 +300,8 @@ function episodeFilter(allEpisodes) {
       if (selectedEpisode === (allEpisodes[i].id).toString() || selectedEpisode === '') {
         // Displays list items that are a match, and nothing if no match
         oneEpisode[i].classList.remove('hidden');
-
         // reset live search
         reset();
-
       } else {
         oneEpisode[i].classList.add('hidden');
       }
